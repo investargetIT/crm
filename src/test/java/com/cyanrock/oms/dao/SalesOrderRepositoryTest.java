@@ -16,12 +16,12 @@ public class SalesOrderRepositoryTest {
 
 
     @Resource
-    SalesOrderRepository salesOrderRepository;
+    SalesOrderDao salesOrderRepository;
 
     @Test
     public void salesOrderInsert(){
         SalesOrder salesOrder = new SalesOrder();
-        salesOrder.setOrderNo("ddd");
+        salesOrder.setOrderNo("ddd2");
         salesOrder.setOrderStatus(1);
         salesOrder.setCategory(1);
         salesOrder.setNeedInvoice(true);
