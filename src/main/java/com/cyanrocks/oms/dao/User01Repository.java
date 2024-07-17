@@ -1,9 +1,7 @@
-package com.cyanrock.oms.dao;
+package com.cyanrocks.oms.dao;
 
-import com.cyanrock.oms.entity.User;
+import com.cyanrocks.oms.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 /**
  * Create By IntelliJ IDEA

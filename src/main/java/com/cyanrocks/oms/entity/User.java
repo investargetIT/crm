@@ -1,4 +1,4 @@
-package com.cyanrock.oms.entity;
+package com.cyanrocks.oms.entity;
 
 import lombok.Data;
 
