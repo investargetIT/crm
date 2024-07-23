@@ -1,6 +1,6 @@
-package com.cyanrocks.oms.dao;
+package com.cyanrocks.dashboard.dao;
 
-import com.cyanrocks.oms.entity.User;
+import com.cyanrocks.dashboard.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

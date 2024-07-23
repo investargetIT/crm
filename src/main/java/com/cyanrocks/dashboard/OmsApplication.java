@@ -1,4 +1,4 @@
-package com.cyanrocks.oms;
+package com.cyanrocks.dashboard;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
