@@ -1,6 +1,6 @@
-package com.cyanrocks.dashboard.dao;
+package com.cyanrocks.wms.dao;
 
-import com.cyanrocks.dashboard.entity.SalesOrder;
+import com.cyanrocks.wms.entity.SalesOrder;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

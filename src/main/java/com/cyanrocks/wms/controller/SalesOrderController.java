@@ -1,7 +1,7 @@
-package com.cyanrocks.dashboard.controller;
+package com.cyanrocks.wms.controller;
 
 import com.cyanrocks.common.vo.api.ApiData;
-import com.cyanrocks.dashboard.dao.SalesOrderDao;
+import com.cyanrocks.wms.dao.SalesOrderDao;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

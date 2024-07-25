@@ -1,4 +1,4 @@
-package com.cyanrocks.dashboard.entity;
+package com.cyanrocks.wms.entity;
 
 import lombok.Data;
 
