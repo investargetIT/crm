@@ -2,7 +2,8 @@ spring:
   debug: true
   # datasource 数据源配置内容
   datasource:
-    url: jdbc:mysql://121.43.145.161:3306/peidi?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+#    url: jdbc:mysql://121.43.145.161:3306/peidi?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://121.43.145.161:3306/peidi_test?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: peidi2024!

@@ -9,7 +9,7 @@ import lombok.Data;
  * @Date 2024/7/23 16:48
  */
 @Data
-@ApiModel(description = "库存有效期请求参数")
+@ApiModel(description = "库存配置请求参数")
 public class InventoryConfigReq {
 
     @ApiModelProperty(value = "字段 仓库-ware_house;分类名称-goods_type;货品名称-goods_name;品牌-brand_name;wrong;error")
