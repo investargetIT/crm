@@ -20,7 +20,7 @@ public class InventoryConfig {
     private Long id;
 
     @Column(length = 50, name = "type" )
-    @Comment("类型：select-选择显示字段；delete-去除显示字段；inventoryWrong-库存黄色预警；inventoryError-库存红色预警；validityLabel1-1/3有效期预警比例;；validityLabel2-2/3有效期预警比例" +
+    @Comment("类型：select-选择显示字段；delete-去除显示字段；inventoryLabel1-库存黄色预警；inventoryLabel2-库存红色预警；validityLabel1-1/3有效期预警比例;；validityLabel2-2/3有效期预警比例" +
             "turnoverCoefficient-库存周转系数:group-分类")
     private String type;
 
