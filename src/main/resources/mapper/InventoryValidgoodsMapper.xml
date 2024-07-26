@@ -49,10 +49,10 @@
         <result column="goods_name" property="goodsName" jdbcType="VARCHAR"/>
         <result column="spec_name" property="specName" jdbcType="VARCHAR"/>
         <result column="groupType" property="groupType" jdbcType="VARCHAR"/>
-        <result column="waring1Num" property="waring1Num" jdbcType="DOUBLE"/>
-        <result column="waring2Num" property="waring2Num" jdbcType="DOUBLE"/>
-        <result column="waring3Num" property="waring3Num" jdbcType="DOUBLE"/>
-        <result column="inventoryNum" property="inventoryNum" jdbcType="DOUBLE"/>
+        <result column="waring1Num" property="waring1Num" jdbcType="INTEGER"/>
+        <result column="waring2Num" property="waring2Num" jdbcType="INTEGER"/>
+        <result column="waring3Num" property="waring3Num" jdbcType="INTEGER"/>
+        <result column="inventoryNum" property="inventoryNum" jdbcType="INTEGER"/>
     </resultMap>
 
     <select id="getValidityWaringRes" resultMap="ValidityWaringMap">

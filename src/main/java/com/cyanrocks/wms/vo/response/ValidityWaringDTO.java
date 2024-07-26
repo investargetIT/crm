@@ -16,8 +16,8 @@ public class ValidityWaringDTO implements Serializable {
     private String goodsName;//货品名称
     private String specName;//规格名称
     private String groupType;//分类
-    private Double waring1Num;
-    private Double waring2Num;
-    private Double waring3Num;
-    private Double inventoryNum;//库存数量
+    private Integer waring1Num;
+    private Integer waring2Num;
+    private Integer waring3Num;
+    private Integer inventoryNum;//库存数量
 }
