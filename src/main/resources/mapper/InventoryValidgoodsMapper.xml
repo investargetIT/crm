@@ -72,10 +72,10 @@
         left join (select *,SUM(inventory_num) waring2Num from inventory_validgoods
         where CAST(REPLACE(due_scale,'%','') AS DECIMAL(6,4)) >= (select value from inventory_config where type = 'validityLabel2')
         and (select value from inventory_config where type = 'validityLabel1') > CAST(REPLACE(due_scale,'%','') AS DECIMAL(6,4))
-        group by spec_no,goods_name,spec_name) t4 on t4.spec_no = t4.spec_no
+        group by spec_no,goods_name,spec_name) t4 on t4.spec_no = t1.spec_no
         left join (select *,SUM(inventory_num) waring3Num from inventory_validgoods
         where (select value from inventory_config where type = 'validityLabel2') > CAST(REPLACE(due_scale,'%','') AS DECIMAL(6,4))
-        group by spec_no,goods_name,spec_name) t5 on t5.spec_no = t5.spec_no
+        group by spec_no,goods_name,spec_name) t5 on t5.spec_no = t1.spec_no
         )a
         order by FIELD(groupType, 'A', 'B', 'C'),FIELD(brand_name, '爵宴', '好适嘉', '齿能','smb'),goods_name
     </select>
