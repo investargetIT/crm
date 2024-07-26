@@ -26,7 +26,7 @@
             when groupType = 'C' and turnoverDays > inventoryLabel2 then 'red'
             else '-' end waringLevel
         from(
-            select t1.*,CAST(t1.inventoryNum * (CAST(IFNULL(t2.value,0) AS DECIMAL(20,12))) AS SIGNED) turnoverDays,t3.value groupType,
+            select t1.*,CAST(t1.inventoryNum * (CAST(IFNULL(t2.value,0) AS DECIMAL(20,18))) AS SIGNED) turnoverDays,t3.value groupType,
                    t2.value turnoverCoefficient,CAST(t4.value AS SIGNED) inventoryLabel1,CAST(t5.value AS SIGNED) inventoryLabel2
             from (
             select *,SUM(inventory_num) inventoryNum from inventory_validgoods

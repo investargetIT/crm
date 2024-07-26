@@ -64,9 +64,9 @@ public class InventoryService extends ServiceImpl<InventoryValidGoodsMapper, Inv
                 sb.append(deleteConfig.getFields()).append(" not in ('");
                 String[] values = deleteConfig.getValue().split(SPLIT_TAG);
                 for (int i = 0; i < values.length; i++){
-                    sb.append(values[i]).append("',");
+                    sb.append(values[i]).append("','");
                 }
-                sb.deleteCharAt(sb.length() - 1);
+                sb.delete(sb.length()-2, sb.length());
                 sb.append(")");
                 sb.append(" and ");
             });
@@ -78,9 +78,9 @@ public class InventoryService extends ServiceImpl<InventoryValidGoodsMapper, Inv
                 sb.append(selectConfig.getFields()).append(" in ('");
                 String[] values = selectConfig.getValue().split(SPLIT_TAG);
                 for (int i = 0; i < values.length; i++){
-                    sb.append(values[i]).append("',");
+                    sb.append(values[i]).append("','");
                 }
-                sb.deleteCharAt(sb.length() - 1);
+                sb.delete(sb.length()-2, sb.length());
                 sb.append(")");
                 sb.append(" and ");
             });
