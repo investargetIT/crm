@@ -30,6 +30,13 @@ public class InventoryService extends ServiceImpl<InventoryValidGoodsMapper, Inv
     @Autowired
     private InventoryConfigMapper configMapper;
 
+    public void setInfo(List<InventoryValidgoods> reqs){
+        baseMapper.deleteAll();
+        reqs.forEach(req->{
+            baseMapper.insert(req);
+        });
+    }
+
     public List<InventoryConfig> getConfig(){
         return configMapper.selectAll();
     }

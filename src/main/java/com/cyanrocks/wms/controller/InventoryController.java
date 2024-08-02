@@ -2,6 +2,7 @@ package com.cyanrocks.wms.controller;
 
 import com.cyanrocks.wms.constants.InventoryFieldsEnum;
 import com.cyanrocks.wms.entity.InventoryConfig;
+import com.cyanrocks.wms.entity.InventoryValidgoods;
 import com.cyanrocks.wms.service.InventoryService;
 import com.cyanrocks.wms.vo.request.InventoryConfigReq;
 import com.cyanrocks.wms.vo.response.FieldsDTO;
@@ -62,5 +63,11 @@ public class InventoryController {
             dtos.add(dto);
         }
         return dtos;
+    }
+
+    @PostMapping("/info")
+    @ApiOperation(value = "新增信息")
+    public void setInfo(@RequestBody List<InventoryValidgoods> reqs) {
+        service.setInfo(reqs);
     }
 }

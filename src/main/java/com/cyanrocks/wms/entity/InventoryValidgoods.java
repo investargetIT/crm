@@ -107,8 +107,8 @@ public class InventoryValidgoods {
     @Comment("临期天数")
     private Long criticalDays;
 
-    @Column(length = 10, name = "critical_scale")
-    @Comment("临期比例")
-    private String criticalScale;
+    @Column(length = 10, name = "late_critical_days")
+    @Comment("距离临期天数")
+    private String lateCriticalDays;
 
 }
