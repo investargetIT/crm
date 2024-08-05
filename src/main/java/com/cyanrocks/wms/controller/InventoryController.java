@@ -1,8 +1,8 @@
 package com.cyanrocks.wms.controller;
 
 import com.cyanrocks.wms.constants.InventoryFieldsEnum;
-import com.cyanrocks.wms.entity.InventoryConfig;
-import com.cyanrocks.wms.entity.InventoryValidgoods;
+import com.cyanrocks.wms.dao.entity.InventoryConfig;
+import com.cyanrocks.wms.dao.entity.InventoryValidgoods;
 import com.cyanrocks.wms.service.InventoryService;
 import com.cyanrocks.wms.vo.request.InventoryConfigReq;
 import com.cyanrocks.wms.vo.response.FieldsDTO;

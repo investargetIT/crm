@@ -1,8 +1,8 @@
-package com.cyanrocks.wms.mapper;
+package com.cyanrocks.wms.dao.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.cyanrocks.wms.entity.InventoryConfig;
+import com.cyanrocks.wms.dao.entity.InventoryConfig;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;

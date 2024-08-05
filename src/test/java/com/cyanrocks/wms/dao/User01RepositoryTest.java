@@ -1,6 +1,6 @@
 package com.cyanrocks.wms.dao;
 
-import com.cyanrocks.wms.entity.User;
+import com.cyanrocks.wms.dao.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

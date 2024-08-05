@@ -1,6 +1,6 @@
 package com.cyanrocks.wms.dao;
 
-import com.cyanrocks.wms.entity.User;
+import com.cyanrocks.wms.dao.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

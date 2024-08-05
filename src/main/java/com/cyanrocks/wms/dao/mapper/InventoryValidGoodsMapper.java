@@ -1,7 +1,7 @@
-package com.cyanrocks.wms.mapper;
+package com.cyanrocks.wms.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.cyanrocks.wms.entity.InventoryValidgoods;
+import com.cyanrocks.wms.dao.entity.InventoryValidgoods;
 import com.cyanrocks.wms.vo.response.InventoryWaringDTO;
 import com.cyanrocks.wms.vo.response.ValidityWaringDTO;
 import org.apache.ibatis.annotations.Delete;

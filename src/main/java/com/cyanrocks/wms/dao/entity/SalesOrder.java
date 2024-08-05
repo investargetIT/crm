@@ -1,4 +1,4 @@
-package com.cyanrocks.wms.entity;
+package com.cyanrocks.wms.dao.entity;
 
 import lombok.Data;
 

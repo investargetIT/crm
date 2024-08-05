@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cyanrocks.wms.mapper.InventoryValidGoodsMapper">
+<mapper namespace="com.cyanrocks.wms.dao.mapper.InventoryValidGoodsMapper">
 
     <resultMap id="InventoryWaringMap" type="com.cyanrocks.wms.vo.response.InventoryWaringDTO">
         <result column="brand_name" property="brandName" jdbcType="VARCHAR"/>
