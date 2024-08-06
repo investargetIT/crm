@@ -26,8 +26,8 @@
             when groupType = 'C' and turnoverDays > inventoryLabel2 then 'red'
             else '-' end waringLevel
         from(
-            select t1.*,CAST(t1.inventoryNum * (CAST(IFNULL(t2.value,0) AS DECIMAL(20,18))) AS SIGNED) turnoverDays,t3.value groupType,
-                   t2.value turnoverCoefficient,CAST(t4.value AS SIGNED) inventoryLabel1,CAST(t5.value AS SIGNED) inventoryLabel2
+            select t1.*,CAST(t1.inventoryNum * (CAST(IFNULL(t2.turnover_coefficient,0) AS DECIMAL(20,18))) AS SIGNED) turnoverDays,t3.goods_type groupType,
+                   t2.turnover_coefficient turnoverCoefficient,CAST(t4.value AS SIGNED) inventoryLabel1,CAST(t5.value AS SIGNED) inventoryLabel2
             from (
             select *,SUM(inventory_num) inventoryNum from inventory_validgoods
             <if test="sql != '' and sql != null">
@@ -35,10 +35,10 @@
             </if>
             group by spec_no,goods_name,spec_name
             )t1
-            left join inventory_config t2 on t2.fields = t1.spec_no and t2.type = 'turnoverCoefficient'
-            left join inventory_config t3 on t3.fields = t1.spec_no and t3.type = 'group'
-            left join inventory_config t4 on t4.fields = t3.value and t4.type = 'inventoryLabel1'
-            left join inventory_config t5 on t5.fields = t3.value and t5.type = 'inventoryLabel2'
+            left join inventory_turnover_coefficient t2 on t2.spec_no = t1.spec_no
+            left join inventory_turnover_coefficient t3 on t3.spec_no = t1.spec_no
+            left join inventory_config t4 on t4.fields = t3.goods_type and t4.type = 'inventoryLabel1'
+            left join inventory_config t5 on t5.fields = t3.goods_type and t5.type = 'inventoryLabel2'
         )a
         order by FIELD(groupType, 'A', 'B', 'C'),FIELD(brand_name, '爵宴', '好适嘉', '齿能','smb'),goods_name
     </select>
@@ -57,7 +57,7 @@
 
     <select id="getValidityWaringRes" resultMap="ValidityWaringMap">
         select * from (
-        select t1.*,t2.value groupType, t3.waring1Num, t4.waring2Num, t5.waring3Num
+        select t1.*,t2.goods_type groupType, t3.waring1Num, t4.waring2Num, t5.waring3Num
         from (
         select *,SUM(inventory_num) inventoryNum from inventory_validgoods
         <if test="sql != '' and sql != null">
@@ -65,7 +65,7 @@
         </if>
         group by spec_no,goods_name,spec_name
         )t1
-        left join inventory_config t2 on t2.fields = t1.spec_no and t2.type = 'group'
+        left join inventory_turnover_coefficient t2 on t2.spec_no = t1.spec_no
         left join (select *,SUM(inventory_num) waring1Num from inventory_validgoods
         where CAST(REPLACE(due_scale,'%','') AS DECIMAL(6,4)) >= (select value from inventory_config where type = 'validityLabel1')
         group by spec_no,goods_name,spec_name) t3 on t3.spec_no = t1.spec_no

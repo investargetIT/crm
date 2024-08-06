@@ -4,11 +4,16 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cyanrocks.wms.constants.ErrorCodeEnum;
 import com.cyanrocks.wms.dao.entity.InventoryConfig;
+import com.cyanrocks.wms.dao.entity.InventoryTurnoverCoefficient;
 import com.cyanrocks.wms.dao.entity.InventoryValidgoods;
 import com.cyanrocks.wms.dao.mapper.InventoryConfigMapper;
+import com.cyanrocks.wms.dao.mapper.InventoryTurnoverCoefficientMapper;
 import com.cyanrocks.wms.dao.mapper.InventoryValidGoodsMapper;
+import com.cyanrocks.wms.exception.WmsBusinessException;
 import com.cyanrocks.wms.vo.request.InventoryConfigReq;
+import com.cyanrocks.wms.vo.request.TurnoverCoefficientReq;
 import com.cyanrocks.wms.vo.response.InventoryWaringDTO;
 import com.cyanrocks.wms.vo.response.ValidityWaringDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +35,42 @@ public class InventoryService extends ServiceImpl<InventoryValidGoodsMapper, Inv
     @Autowired
     private InventoryConfigMapper configMapper;
 
+    @Autowired
+    private InventoryTurnoverCoefficientMapper turnoverCoefficientMapper;
+
     public void setInfo(List<InventoryValidgoods> reqs){
         baseMapper.deleteAll();
         reqs.forEach(req->{
             baseMapper.insert(req);
+        });
+    }
+
+    public List<InventoryTurnoverCoefficient> getTurnoverCoefficient(){
+        return turnoverCoefficientMapper.selectAll();
+    }
+
+    @Transactional
+    public void setTurnoverCoefficient(List<TurnoverCoefficientReq> reqs){
+        turnoverCoefficientMapper.deleteAll();
+        reqs.forEach(req -> {
+            InventoryTurnoverCoefficient turnoverCoefficient = new InventoryTurnoverCoefficient();
+            turnoverCoefficient.setSpecNo(req.getSpecNo());
+            turnoverCoefficient.setGoodsName(req.getGoodsName());
+            turnoverCoefficient.setSpacName(req.getSpacName());
+            turnoverCoefficient.setGoodsType(req.getGoodsType());
+            turnoverCoefficient.setComment(req.getComment());
+            turnoverCoefficient.setTurnoverCoefficient(req.getTurnoverCoefficient());
+            if (null != turnoverCoefficientMapper.selectOne(Wrappers.<InventoryTurnoverCoefficient>lambdaQuery()
+                    .eq(InventoryTurnoverCoefficient::getSpecNo,req.getSpecNo())
+                    .eq(InventoryTurnoverCoefficient::getGoodsName,req.getGoodsName())
+                    .eq(InventoryTurnoverCoefficient::getSpacName,req.getSpacName()))){
+                throw new WmsBusinessException(ErrorCodeEnum.REPEAT_PARAM.getCode(), "商家编码，货品名称，规格名称存在重复");
+            }
+            if (null != turnoverCoefficientMapper.selectOne(Wrappers.<InventoryTurnoverCoefficient>lambdaQuery()
+                    .eq(InventoryTurnoverCoefficient::getSpecNo,req.getSpecNo()))){
+                throw new WmsBusinessException(ErrorCodeEnum.REPEAT_PARAM.getCode(), "商家编码存在重复");
+            }
+            turnoverCoefficientMapper.insert(turnoverCoefficient);
         });
     }
 
@@ -42,16 +79,19 @@ public class InventoryService extends ServiceImpl<InventoryValidGoodsMapper, Inv
     }
 
     @Transactional
-    public void setConfig(List<InventoryConfigReq> reqs){
-        configMapper.deleteAll();
-        reqs.forEach(req -> {
+    public void setConfig(InventoryConfigReq reqs){
+        if (null == reqs.getConfigType()){
+            configMapper.deleteAll();
+        }else {
+            configMapper.delete(Wrappers.<InventoryConfig>lambdaQuery().eq(InventoryConfig::getType,reqs.getConfigType()));
+        }
+        reqs.getConfigList().forEach(req -> {
             InventoryConfig inventoryConfig = new InventoryConfig();
             inventoryConfig.setType(req.getType());
             inventoryConfig.setFields(req.getFields());
             inventoryConfig.setValue(req.getValue());
             configMapper.insert(inventoryConfig);
         });
-
     }
 
     public List<InventoryWaringDTO> inventoryWaring(){

@@ -51,7 +51,7 @@ public class InventoryValidgoods {
 
     @Column(length = 255, name = "spec_name")
     @Comment("规格名称")
-    private String spacName;
+    private String specName;
 
     @Column(length = 50, name = "barcode")
     @Comment("条形码")

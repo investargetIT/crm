@@ -2,9 +2,11 @@ package com.cyanrocks.wms.controller;
 
 import com.cyanrocks.wms.constants.InventoryFieldsEnum;
 import com.cyanrocks.wms.dao.entity.InventoryConfig;
+import com.cyanrocks.wms.dao.entity.InventoryTurnoverCoefficient;
 import com.cyanrocks.wms.dao.entity.InventoryValidgoods;
 import com.cyanrocks.wms.service.InventoryService;
 import com.cyanrocks.wms.vo.request.InventoryConfigReq;
+import com.cyanrocks.wms.vo.request.TurnoverCoefficientReq;
 import com.cyanrocks.wms.vo.response.FieldsDTO;
 import com.cyanrocks.wms.vo.response.InventoryWaringDTO;
 import com.cyanrocks.wms.vo.response.ValidityWaringDTO;
@@ -36,8 +38,21 @@ public class InventoryController {
 
     @PostMapping("/config")
     @ApiOperation(value = "配置参数")
-    public void setConfig(@RequestBody List<InventoryConfigReq> reqs) {
+    public void setConfig(@RequestBody InventoryConfigReq reqs) {
         service.setConfig(reqs);
+    }
+
+    @GetMapping("/turnoverCoefficient")
+    @ApiOperation(value = "获取库存周转系数")
+    public List<InventoryTurnoverCoefficient> getTurnoverCoefficient() {
+        return service.getTurnoverCoefficient();
+    }
+
+
+    @PostMapping("/turnoverCoefficient")
+    @ApiOperation(value = "配置库存周转系数")
+    public void setTurnoverCoefficient(@RequestBody List<TurnoverCoefficientReq> reqs) {
+        service.setTurnoverCoefficient(reqs);
     }
 
     @GetMapping("/inventory-waring")
