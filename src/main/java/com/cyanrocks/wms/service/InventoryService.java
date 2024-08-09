@@ -98,7 +98,7 @@ public class InventoryService extends ServiceImpl<InventoryValidGoodsMapper, Inv
     @Transactional
     public void setConfig(List<InventoryConfigReq> reqs){
         List<String> sql = Arrays.asList("validityLabel1","validityLabel2","inventoryLabel1","inventoryLabel2");
-        configMapper.delete(Wrappers.<InventoryConfig>lambdaQuery().in(InventoryConfig::getType,sql));
+        configMapper.delete(Wrappers.<InventoryConfig>lambdaQuery().notIn(InventoryConfig::getType,sql));
         reqs.forEach(req -> {
             InventoryConfig inventoryConfig = new InventoryConfig();
             inventoryConfig.setType(req.getType());
