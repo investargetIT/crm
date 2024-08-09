@@ -30,7 +30,7 @@ public class InventoryTurnoverCoefficient {
 
     @Column(length = 255, name = "spec_name")
     @Comment("规格名称")
-    private String spacName;
+    private String specName;
 
     @Column(length = 100, name = "goods_type")
     @Comment("分类名称")

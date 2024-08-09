@@ -32,4 +32,13 @@ public enum InventoryFieldsEnum {
         this.fieldsCn = fieldsCn;
         this.fieldsEn = fieldsEn;
     }
+
+    public static String getCnByEn(String fieldsEn){
+        for (InventoryFieldsEnum value : InventoryFieldsEnum.values()) {
+            if (fieldsEn.equals(value.getFieldsEn())) {
+                return value.getFieldsCn();
+            }
+        }
+        throw new RuntimeException(String.format("不合法的fieldsEn = %s", fieldsEn));
+    }
 }

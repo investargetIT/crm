@@ -3,9 +3,6 @@ package com.cyanrocks.wms.vo.request;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.hibernate.annotations.Comment;
-
-import java.util.List;
 
 /**
  * @Author wjq
@@ -22,7 +19,7 @@ public class TurnoverCoefficientReq {
     private String goodsName;
 
     @ApiModelProperty(value = "规格名称")
-    private String spacName;
+    private String specName;
 
     @ApiModelProperty(value = "规格名称")
     private String goodsType;

@@ -23,9 +23,9 @@ import javax.servlet.http.HttpServletRequest;
 public class GlobalExceptionHandler {
     private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @ExceptionHandler({WmsBusinessException.class})
+    @ExceptionHandler({BusinessException.class})
     @ResponseBody
-    public GenericResponse<Void> handleBusinessException(WmsBusinessException e, HttpServletRequest request) {
+    public GenericResponse<Void> handleBusinessException(BusinessException e, HttpServletRequest request) {
         return GenericResponse.bizError(e.getCode(), e.getMessage(), null);
     }
 

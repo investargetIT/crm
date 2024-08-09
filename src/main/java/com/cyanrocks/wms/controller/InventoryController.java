@@ -8,6 +8,7 @@ import com.cyanrocks.wms.service.InventoryService;
 import com.cyanrocks.wms.vo.request.InventoryConfigReq;
 import com.cyanrocks.wms.vo.request.TurnoverCoefficientReq;
 import com.cyanrocks.wms.vo.response.FieldsDTO;
+import com.cyanrocks.wms.vo.response.InventoryConfigVO;
 import com.cyanrocks.wms.vo.response.InventoryWaringDTO;
 import com.cyanrocks.wms.vo.response.ValidityWaringDTO;
 import io.swagger.annotations.Api;
@@ -32,13 +33,13 @@ public class InventoryController {
 
     @GetMapping("/config")
     @ApiOperation(value = "获取参数")
-    public List<InventoryConfig> getConfig() {
+    public List<InventoryConfigVO> getConfig() {
         return service.getConfig();
     }
 
     @PostMapping("/config")
     @ApiOperation(value = "配置参数")
-    public void setConfig(@RequestBody InventoryConfigReq reqs) {
+    public void setConfig(@RequestBody List<InventoryConfigReq> reqs) {
         service.setConfig(reqs);
     }
 

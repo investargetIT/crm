@@ -1,10 +1,12 @@
 package com.cyanrocks.wms.constants;
 
+import com.cyanrocks.common.em.AppErrorCode;
+
 public enum ErrorCodeEnum {
     /**
      * 重复参数
      */
-    REPEAT_PARAM("105" + "100000"),
+    REPEAT_PARAM(AppErrorCode.WMS.getCode() + "100000"),
 
     ;
 

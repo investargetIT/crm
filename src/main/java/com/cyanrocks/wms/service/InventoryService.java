@@ -1,25 +1,31 @@
 package com.cyanrocks.wms.service;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cyanrocks.wms.constants.ErrorCodeEnum;
+import com.cyanrocks.wms.constants.InventoryFieldsEnum;
 import com.cyanrocks.wms.dao.entity.InventoryConfig;
 import com.cyanrocks.wms.dao.entity.InventoryTurnoverCoefficient;
 import com.cyanrocks.wms.dao.entity.InventoryValidgoods;
 import com.cyanrocks.wms.dao.mapper.InventoryConfigMapper;
 import com.cyanrocks.wms.dao.mapper.InventoryTurnoverCoefficientMapper;
 import com.cyanrocks.wms.dao.mapper.InventoryValidGoodsMapper;
-import com.cyanrocks.wms.exception.WmsBusinessException;
+import com.cyanrocks.wms.exception.BusinessException;
 import com.cyanrocks.wms.vo.request.InventoryConfigReq;
 import com.cyanrocks.wms.vo.request.TurnoverCoefficientReq;
+import com.cyanrocks.wms.vo.response.InventoryConfigVO;
 import com.cyanrocks.wms.vo.response.InventoryWaringDTO;
 import com.cyanrocks.wms.vo.response.ValidityWaringDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -56,40 +62,52 @@ public class InventoryService extends ServiceImpl<InventoryValidGoodsMapper, Inv
             InventoryTurnoverCoefficient turnoverCoefficient = new InventoryTurnoverCoefficient();
             turnoverCoefficient.setSpecNo(req.getSpecNo());
             turnoverCoefficient.setGoodsName(req.getGoodsName());
-            turnoverCoefficient.setSpacName(req.getSpacName());
+            turnoverCoefficient.setSpecName(req.getSpecName());
             turnoverCoefficient.setGoodsType(req.getGoodsType());
             turnoverCoefficient.setComment(req.getComment());
             turnoverCoefficient.setTurnoverCoefficient(req.getTurnoverCoefficient());
             if (null != turnoverCoefficientMapper.selectOne(Wrappers.<InventoryTurnoverCoefficient>lambdaQuery()
                     .eq(InventoryTurnoverCoefficient::getSpecNo,req.getSpecNo())
                     .eq(InventoryTurnoverCoefficient::getGoodsName,req.getGoodsName())
-                    .eq(InventoryTurnoverCoefficient::getSpacName,req.getSpacName()))){
-                throw new WmsBusinessException(ErrorCodeEnum.REPEAT_PARAM.getCode(), "商家编码，货品名称，规格名称存在重复");
+                    .eq(InventoryTurnoverCoefficient::getSpecName,req.getSpecName()))){
+                throw new BusinessException(ErrorCodeEnum.REPEAT_PARAM.getCode(), "商家编码，货品名称，规格名称存在重复");
             }
             if (null != turnoverCoefficientMapper.selectOne(Wrappers.<InventoryTurnoverCoefficient>lambdaQuery()
                     .eq(InventoryTurnoverCoefficient::getSpecNo,req.getSpecNo()))){
-                throw new WmsBusinessException(ErrorCodeEnum.REPEAT_PARAM.getCode(), "商家编码存在重复");
+                throw new BusinessException(ErrorCodeEnum.REPEAT_PARAM.getCode(), "商家编码存在重复");
             }
             turnoverCoefficientMapper.insert(turnoverCoefficient);
         });
     }
 
-    public List<InventoryConfig> getConfig(){
-        return configMapper.selectAll();
+    public List<InventoryConfigVO> getConfig(){
+        List<String> sql = Arrays.asList("select","delete");
+        List<InventoryConfig> configs = configMapper.selectList(Wrappers.<InventoryConfig>lambdaQuery().in(InventoryConfig::getType,sql));
+        List<InventoryConfigVO> result = new ArrayList<>();
+        configs.forEach(config->{
+            InventoryConfigVO vo = new InventoryConfigVO();
+            vo.setFields(config.getFields());
+            vo.setType(config.getType());
+            vo.setValue(config.getValue().split(SPLIT_TAG));
+            vo.setLabel(InventoryFieldsEnum.getCnByEn(config.getFields()));
+            result.add(vo);
+        });
+        return result;
     }
 
     @Transactional
-    public void setConfig(InventoryConfigReq reqs){
-        if (null == reqs.getConfigType()){
-            configMapper.deleteAll();
-        }else {
-            configMapper.delete(Wrappers.<InventoryConfig>lambdaQuery().eq(InventoryConfig::getType,reqs.getConfigType()));
-        }
-        reqs.getConfigList().forEach(req -> {
+    public void setConfig(List<InventoryConfigReq> reqs){
+        List<String> sql = Arrays.asList("validityLabel1","validityLabel2","inventoryLabel1","inventoryLabel2");
+        configMapper.delete(Wrappers.<InventoryConfig>lambdaQuery().in(InventoryConfig::getType,sql));
+        reqs.forEach(req -> {
             InventoryConfig inventoryConfig = new InventoryConfig();
             inventoryConfig.setType(req.getType());
             inventoryConfig.setFields(req.getFields());
-            inventoryConfig.setValue(req.getValue());
+//            if (req.getValue() instanceof String[]){
+//                String[] strings = (String[]) req.getValue();
+//                inventoryConfig.setValue(String.join("#/#",strings));
+//            }
+            inventoryConfig.setValue(String.join(SPLIT_TAG,req.getValue()));
             configMapper.insert(inventoryConfig);
         });
     }

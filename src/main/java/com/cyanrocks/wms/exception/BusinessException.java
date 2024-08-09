@@ -6,22 +6,22 @@ package com.cyanrocks.wms.exception;
  * @Date 2021-10-12 17:53
  * @Version 1.0
  **/
-public class WmsBusinessException extends RuntimeException {
+public class BusinessException extends RuntimeException {
     private int code;
 
     private Object data;
 
-    public WmsBusinessException(int code, String message, Throwable cause) {
+    public BusinessException(int code, String message, Throwable cause) {
         super(message, cause);
         this.code = code;
     }
 
-    public WmsBusinessException(int code, String message) {
+    public BusinessException(int code, String message) {
         super(message);
         this.code = code;
     }
 
-    public WmsBusinessException(int code, String message, Object data) {
+    public BusinessException(int code, String message, Object data) {
         super(message);
         this.code = code;
         this.data = data;
