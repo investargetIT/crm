@@ -6,4 +6,4 @@
 4. 上传镜像到远程服务器
 5. 远程服务器上载入镜像 `docker load -i peidi-wms.tar`
 6. 停止并移除旧的容器 `docker stop peidi-wms` `docker rm peidi-wms`
-7. 运行新的容器 `docker run --name peidi-wms -p 8080:8080 -d peidi-wms`
+7. 运行新的容器 `docker run --name peidi-wms -p 8083:8083 -d peidi-wms`

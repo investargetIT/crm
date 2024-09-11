@@ -13,9 +13,9 @@ import java.util.List;
 @Mapper
 public interface InventoryValidGoodsMapper extends BaseMapper<InventoryValidgoods> {
 
-    List<InventoryWaringDTO> getInventoryWaringRes(@Param("sql") String sql);
+    List<InventoryWaringDTO> getInventoryWaringRes(@Param("filter") String filter, @Param("sort") String sort, @Param("search") String search);
 
-    List<ValidityWaringDTO> getValidityWaringRes(@Param("sql") String sql);
+    List<ValidityWaringDTO> getValidityWaringRes(@Param("filter") String filter, @Param("sort") String sort, @Param("search") String search);
 
     @Delete("delete from inventory_validgoods")
     void deleteAll();

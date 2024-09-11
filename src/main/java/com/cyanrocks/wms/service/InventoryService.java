@@ -1,9 +1,6 @@
 package com.cyanrocks.wms.service;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -17,7 +14,9 @@ import com.cyanrocks.wms.dao.mapper.InventoryTurnoverCoefficientMapper;
 import com.cyanrocks.wms.dao.mapper.InventoryValidGoodsMapper;
 import com.cyanrocks.wms.exception.BusinessException;
 import com.cyanrocks.wms.vo.request.InventoryConfigReq;
+import com.cyanrocks.wms.vo.request.SearchReq;
 import com.cyanrocks.wms.vo.request.TurnoverCoefficientReq;
+import com.cyanrocks.wms.vo.request.SortReq;
 import com.cyanrocks.wms.vo.response.InventoryConfigVO;
 import com.cyanrocks.wms.vo.response.InventoryWaringDTO;
 import com.cyanrocks.wms.vo.response.ValidityWaringDTO;
@@ -47,7 +46,13 @@ public class InventoryService extends ServiceImpl<InventoryValidGoodsMapper, Inv
     public void setInfo(List<InventoryValidgoods> reqs){
         baseMapper.deleteAll();
         reqs.forEach(req->{
-            baseMapper.insert(req);
+            try {
+                baseMapper.insert(req);
+            }catch (Exception e) {
+                // 捕捉其他异常
+                System.out.println("发生异常: "+e.getMessage());
+                throw new RuntimeException("插入有效期商品失败, specNo："+req.getSpecNo());
+            }
         });
     }
 
@@ -112,12 +117,146 @@ public class InventoryService extends ServiceImpl<InventoryValidGoodsMapper, Inv
         });
     }
 
-    public List<InventoryWaringDTO> inventoryWaring(){
-        return baseMapper.getInventoryWaringRes(buildConfigFilterSql());
+    public List<InventoryWaringDTO> inventoryWaring(List<SortReq> sortReqs, List<SearchReq> searchReqs){
+        String filter = buildConfigFilterSql();
+        String sort = buildSortSql(sortReqs);
+        String search = buildSearchSql(searchReqs);
+        return baseMapper.getInventoryWaringRes(filter,sort,search);
     }
 
-    public List<ValidityWaringDTO> validityWaring(){
-        return baseMapper.getValidityWaringRes(buildConfigFilterSql());
+    public List<ValidityWaringDTO> validityWaring(List<SortReq> sortReqs, List<SearchReq> searchReqs){
+        String filter = buildConfigFilterSql();
+        String sort = buildSortSql(sortReqs);
+        String search = buildSearchSql(searchReqs);
+        return baseMapper.getValidityWaringRes(filter,sort,search);
+    }
+
+    private String buildSearchSql(List<SearchReq> reqs){
+        if (CollectionUtil.isEmpty(reqs)){
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("where ");
+        reqs.forEach(req->{
+            switch (req.getSearchName()){
+                case "brandName":{
+                    buildSearch(req, "brand_name", sb);
+                    break;
+                }
+                case "specNo":{
+                    buildSearch(req, "spec_no", sb);
+                    break;
+                }
+                case "goodsName":{
+                    buildSearch(req, "goods_name", sb);
+                    break;
+                }
+                case "specName":{
+                    buildSearch(req, "spec_name", sb);
+                    break;
+                }
+                case "inventoryNum":{
+                    buildSearch(req, "inventoryNum", sb);
+                    break;
+                }
+                case "turnoverDays":{
+                    buildSearch(req, "turnoverDays", sb);
+                    break;
+                }
+                case "groupType":{
+                    buildSearch(req, "groupType", sb);
+                    break;
+                }
+                case "waringLevel":{
+                    buildSearch(req, "waringLevel", sb);
+                    break;
+                }
+                case "waring1Num":{
+                    buildSearch(req, "waring1Num", sb);
+                    break;
+                }
+                case "waring2Num":{
+                    buildSearch(req, "waring2Num", sb);
+                    break;
+                }
+                case "waring3Num":{
+                    buildSearch(req, "waring3Num", sb);
+                    break;
+                }
+                default:throw new RuntimeException("error searchName");
+            }
+        });
+        sb.delete(sb.length()-3, sb.length());
+        return sb.toString();
+    }
+
+    private void buildSearch(SearchReq req, String field, StringBuilder sb){
+        if ("like".equals(req.getSearchType())){
+            sb.append(" "+field+" like '%"+req.getSearchValue()+"%'");
+        }else if ("between".equals(req.getSearchType())){
+            String[] value = req.getSearchValue().split(SPLIT_TAG);
+            sb.append(" "+field+" <= "+value[1]+" and "+field+" >= "+value[0]);
+        }
+        sb.append(" and");
+    }
+
+    private String buildSortSql(List<SortReq> reqs){
+        if (CollectionUtil.isEmpty(reqs)){
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("order by");
+        reqs.forEach(req->{
+            switch (req.getSortName()){
+                case "brandName":{
+                    sb.append(" brand_name ").append(req.getSortType()).append(",");
+                    break;
+                }
+                case "specNo":{
+                    sb.append(" spec_no ").append(req.getSortType()).append(",");
+                    break;
+                }
+                case "goodsName":{
+                    sb.append(" goods_name ").append(req.getSortType()).append(",");
+                    break;
+                }
+                case "specName":{
+                    sb.append(" spec_name ").append(req.getSortType()).append(",");
+                    break;
+                }
+                case "inventoryNum":{
+                    sb.append(" inventoryNum ").append(req.getSortType()).append(",");
+                    break;
+                }
+                case "turnoverDays":{
+                    sb.append(" turnoverDays ").append(req.getSortType()).append(",");
+                    break;
+                }
+                case "groupType":{
+                    sb.append(" groupType ").append(req.getSortType()).append(",");
+                    break;
+                }
+                case "waringLevel":{
+                    sb.append(" FIELD(waringLevel, 'green', 'yellow', 'red') ").append(req.getSortType()).append(",");
+                    break;
+                }
+                case "waring1Num":{
+                    sb.append(" waring1Num ").append(req.getSortType()).append(",");
+                    break;
+                }
+                case "waring2Num":{
+                    sb.append(" waring2Num ").append(req.getSortType()).append(",");
+                    break;
+                }
+                case "waring3Num":{
+                    sb.append(" waring3Num ").append(req.getSortType()).append(",");
+                    break;
+                }
+                default:throw new RuntimeException("error sortName");
+        }
+        });
+        sb.delete(sb.length()-1, sb.length());
+        return sb.toString();
     }
 
     private String buildConfigFilterSql(){

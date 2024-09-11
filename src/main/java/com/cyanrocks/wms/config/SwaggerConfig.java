@@ -8,12 +8,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.Parameter;
 import springfox.documentation.service.ResponseMessage;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -42,7 +44,17 @@ public class SwaggerConfig {
         responseMessageList.add(new ResponseMessageBuilder().code(ResCodeEnum.SUCCESS.getErrCode())
                 .message(ResCodeEnum.SUCCESS.getErrMsg()).responseModel(new ModelRef(ResCodeEnum.SUCCESS.getErrMsg())).build());
 
+        List<Parameter> headers = new ArrayList<>();
+        headers.add(new ParameterBuilder()
+                .name("Authorization")
+                .description("Custom header description")
+                .modelRef(new ModelRef("string"))
+                .parameterType("header")
+                .required(false)
+                .build());
+
         return new Docket(DocumentationType.SWAGGER_2)
+                .globalOperationParameters(headers)
                 // 去掉swagger默认的状态码
                 .useDefaultResponseMessages(false).globalResponseMessage(RequestMethod.GET, responseMessageList)
                 .globalResponseMessage(RequestMethod.POST, responseMessageList)

@@ -1,12 +1,14 @@
 package com.cyanrocks.wms.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.cyanrocks.wms.constants.InventoryFieldsEnum;
-import com.cyanrocks.wms.dao.entity.InventoryConfig;
 import com.cyanrocks.wms.dao.entity.InventoryTurnoverCoefficient;
 import com.cyanrocks.wms.dao.entity.InventoryValidgoods;
 import com.cyanrocks.wms.service.InventoryService;
 import com.cyanrocks.wms.vo.request.InventoryConfigReq;
+import com.cyanrocks.wms.vo.request.SearchReq;
 import com.cyanrocks.wms.vo.request.TurnoverCoefficientReq;
+import com.cyanrocks.wms.vo.request.SortReq;
 import com.cyanrocks.wms.vo.response.FieldsDTO;
 import com.cyanrocks.wms.vo.response.InventoryConfigVO;
 import com.cyanrocks.wms.vo.response.InventoryWaringDTO;
@@ -58,14 +60,20 @@ public class InventoryController {
 
     @GetMapping("/inventory-waring")
     @ApiOperation(value = "库存预警列表")
-    public List<InventoryWaringDTO> inventoryWaring(){
-        return service.inventoryWaring();
+    public List<InventoryWaringDTO> inventoryWaring(@RequestParam(value="sortStr",required=false) String sortStr,
+                                                    @RequestParam(value="searchStr",required=false) String searchStr){
+        List<SortReq> sortReqs = JSONObject.parseArray(sortStr, SortReq.class);
+        List<SearchReq> searchReqs = JSONObject.parseArray(searchStr, SearchReq.class);
+        return service.inventoryWaring(sortReqs,searchReqs);
     }
 
     @GetMapping("/validity-waring")
     @ApiOperation(value = "有效期预警列表")
-    public List<ValidityWaringDTO> validityWaring(){
-        return service.validityWaring();
+    public List<ValidityWaringDTO> validityWaring(@RequestParam(value="sortStr",required=false) String sortStr,
+                                                  @RequestParam(value="searchStr",required=false) String searchStr){
+        List<SortReq> reqs = JSONObject.parseArray(sortStr, SortReq.class);
+        List<SearchReq> searchReqs = JSONObject.parseArray(searchStr, SearchReq.class);
+        return service.validityWaring(reqs,searchReqs);
     }
 
     @GetMapping("/fields")

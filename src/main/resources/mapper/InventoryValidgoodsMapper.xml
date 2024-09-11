@@ -14,33 +14,40 @@
     </resultMap>
 
     <select id="getInventoryWaringRes" resultMap="InventoryWaringMap">
+        select * from(
         select *,case when turnoverCoefficient is null or inventoryLabel1 is null or inventoryLabel2 is null then '-'
-            when groupType = 'A' and inventoryLabel1 > turnoverDays then 'red'
-            when groupType = 'A' and turnoverDays >= inventoryLabel1 and inventoryLabel2 >= turnoverDays  then 'green'
-            when groupType = 'A' and turnoverDays > inventoryLabel2 then 'yellow'
-            when groupType = 'B' and inventoryLabel1 > turnoverDays then 'red'
-            when groupType = 'B' and turnoverDays >= inventoryLabel1 and inventoryLabel2 >= turnoverDays  then 'green'
-            when groupType = 'B' and turnoverDays > inventoryLabel2 then 'yellow'
-            when groupType = 'C' and inventoryLabel1 > turnoverDays then 'green'
-            when groupType = 'C' and turnoverDays >= inventoryLabel1 and inventoryLabel2 >= turnoverDays  then 'yellow'
-            when groupType = 'C' and turnoverDays > inventoryLabel2 then 'red'
-            else '-' end waringLevel
+        when groupType = 'A' and inventoryLabel1 > turnoverDays then 'red'
+        when groupType = 'A' and turnoverDays >= inventoryLabel1 and inventoryLabel2 >= turnoverDays  then 'green'
+        when groupType = 'A' and turnoverDays > inventoryLabel2 then 'yellow'
+        when groupType = 'B' and inventoryLabel1 > turnoverDays then 'red'
+        when groupType = 'B' and turnoverDays >= inventoryLabel1 and inventoryLabel2 >= turnoverDays  then 'green'
+        when groupType = 'B' and turnoverDays > inventoryLabel2 then 'yellow'
+        when groupType = 'C' and inventoryLabel1 > turnoverDays then 'green'
+        when groupType = 'C' and turnoverDays >= inventoryLabel1 and inventoryLabel2 >= turnoverDays  then 'yellow'
+        when groupType = 'C' and turnoverDays > inventoryLabel2 then 'red'
+        else '-' end waringLevel
         from(
-            select t1.*,CAST(t1.inventoryNum * (CAST(IFNULL(t2.turnover_coefficient,0) AS DECIMAL(20,18))) AS SIGNED) turnoverDays,t3.goods_type groupType,
-                   t2.turnover_coefficient turnoverCoefficient,CAST(t4.value AS SIGNED) inventoryLabel1,CAST(t5.value AS SIGNED) inventoryLabel2
-            from (
-            select *,SUM(inventory_num) inventoryNum from inventory_validgoods
-            <if test="sql != '' and sql != null">
-                where ${sql}
-            </if>
-            group by spec_no,goods_name,spec_name
-            )t1
-            left join inventory_turnover_coefficient t2 on t2.spec_no = t1.spec_no
-            left join inventory_turnover_coefficient t3 on t3.spec_no = t1.spec_no
-            left join inventory_config t4 on t4.fields = t3.goods_type and t4.type = 'inventoryLabel1'
-            left join inventory_config t5 on t5.fields = t3.goods_type and t5.type = 'inventoryLabel2'
+        select t1.*,CAST(t1.inventoryNum * (CAST(IFNULL(t2.turnover_coefficient,0) AS DECIMAL(20,18))) AS SIGNED) turnoverDays,t3.goods_type groupType,
+        t2.turnover_coefficient turnoverCoefficient,CAST(t4.value AS SIGNED) inventoryLabel1,CAST(t5.value AS SIGNED) inventoryLabel2
+        from (
+        select *,IFNULL(SUM(inventory_num),0) inventoryNum from inventory_validgoods
+        <if test="filter != '' and filter != null">
+            where ${filter}
+        </if>
+        group by spec_no,goods_name,spec_name
+        )t1
+        left join inventory_turnover_coefficient t2 on t2.spec_no = t1.spec_no
+        left join inventory_turnover_coefficient t3 on t3.spec_no = t1.spec_no
+        left join inventory_config t4 on t4.fields = t3.goods_type and t4.type = 'inventoryLabel1'
+        left join inventory_config t5 on t5.fields = t3.goods_type and t5.type = 'inventoryLabel2'
         )a
-        order by FIELD(groupType, 'A', 'B', 'C'),FIELD(brand_name, '爵宴', '好适嘉', '齿能','smb'),goods_name
+        )t
+        <if test="search != '' and search != null">
+            ${search}
+        </if>
+        <if test="sort != '' and sort != null">
+            ${sort}
+        </if>
     </select>
 
     <resultMap id="ValidityWaringMap" type="com.cyanrocks.wms.vo.response.ValidityWaringDTO">
@@ -57,11 +64,11 @@
 
     <select id="getValidityWaringRes" resultMap="ValidityWaringMap">
         select * from (
-        select t1.*,t2.goods_type groupType, t3.waring1Num, t4.waring2Num, t5.waring3Num
+        select t1.*,t2.goods_type groupType, IFNULL(t3.waring1Num,0) waring1Num, IFNULL(t4.waring2Num,0) waring2Num, IFNULL(t5.waring3Num,0) waring3Num
         from (
         select *,SUM(inventory_num) inventoryNum from inventory_validgoods
-        <if test="sql != '' and sql != null">
-            where ${sql}
+        <if test="filter != '' and filter != null">
+            where ${filter}
         </if>
         group by spec_no,goods_name,spec_name
         )t1
@@ -77,6 +84,11 @@
         where (select value from inventory_config where type = 'validityLabel2') > CAST(REPLACE(due_scale,'%','') AS DECIMAL(6,4))
         group by spec_no,goods_name,spec_name) t5 on t5.spec_no = t1.spec_no
         )a
-        order by FIELD(groupType, 'A', 'B', 'C'),FIELD(brand_name, '爵宴', '好适嘉', '齿能','smb'),goods_name
+        <if test="search != '' and search != null">
+            ${search}
+        </if>
+        <if test="sort != '' and sort != null">
+            ${sort}
+        </if>
     </select>
 </mapper>

@@ -8,6 +8,15 @@ public enum ErrorCodeEnum {
      */
     REPEAT_PARAM(AppErrorCode.WMS.getCode() + "100000"),
 
+    /**
+     * 用户session过期，登陆状态失效
+     */
+    SESSION_EXPIRED(AppErrorCode.USER.getCode() + "100011"),
+
+    /**
+     * 无效的sessionId
+     */
+    SESSION_INVALID(AppErrorCode.USER.getCode() + "100012")
     ;
 
 
